@@ -4,14 +4,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-clc
-clear
-
-% path='/Users/johnwang/OneLegacy/code_Yi/matlab_code';
-% cd(path);
-
-
-load('est_data_1h_v2.mat');
+% clc
+% clear
+% 
+% % path='/Users/johnwang/OneLegacy/code_Yi/matlab_code';
+% % cd(path);
+% 
+% 
+% load('est_data_1h_v2.mat');
 
 
 
@@ -27,7 +27,7 @@ organ_allocated=[HR_allocated, LU_allocated, LI_allocated];
 
 
 wait_cost=-1;
-beta=1;
+beta=0.99;
 T=max(time_index);  % last period
 n=max(donor_index); % number of donors
 n_org=size(organ_available, 2); % number of organs considered
@@ -276,11 +276,16 @@ end
 
 %% Start MLE 
 
-para_init=[1;1;1;1;1;1;-1]; % initial guess of the parameters
+para_init=[10;5;3;0;0;0;0;0]; % initial guess of the parameters
 options=optimset('Display','iter','MaxFunEvals',1e5,'MaxIter',1e5,'TolFun',1e-6,'TolX',1e-4);
 
+gs = GlobalSearch;
+llmin = @(para) log_ll(para, wait_cost, beta, T, N, ...
+                    alloc_vec, category, tran_matrix, time_index, state_index, cross_clamp);
+problem = createOptimProblem('fmincon', 'objective', llmin, 'x0', para_init);
+[para_est, val] = run(gs, problem)
 
-para_est=fminsearch(@(para) log_ll(para, wait_cost, beta, T, N, ...
-                    alloc_vec, category, tran_matrix, time_index, state_index, cross_clamp), para_init, options)
+% para_est=fminsearch(@(para) log_ll(para, wait_cost, beta, T, N, ...
+%                     alloc_vec, category, tran_matrix, time_index, state_index, cross_clamp), para_init, options)
 
 save('para_est.mat','para_est','para_init');

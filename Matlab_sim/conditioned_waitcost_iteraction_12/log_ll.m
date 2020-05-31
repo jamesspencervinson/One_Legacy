@@ -2,12 +2,12 @@ function obj=log_ll(para, wait_cost, beta, T, N, ...
                     alloc_vec, category, tran_matrix, time_index, state_index, cross_clamp)
 %% Compute choice prob for all states and all t                
 
+% para = para_est(1:6);
 para_vec=cell(4,1);
 para_vec{1,1}=para(1:6);
 para_vec{2,1}=[para(1); para(3); para(5)];
 para_vec{3,1}=[para(2); para(3); para(6)];
 para_vec{4,1}=para(3);
-c = para(7);
 
 V_vec=cell(4,1);
 choice_prob_vec=cell(4,1);
@@ -23,9 +23,12 @@ alloc_vec{2,1} = [temp interaction];
 temp = alloc_vec{3,1};
 interaction = [temp(:,1).*temp(:,2)];
 alloc_vec{3,1} = [temp interaction];
+costs = [-1; para(7)];
+c = para(8);
 
-for j=1:4
-   
+for j=1:2
+%     c = para(6+j);
+    wait_cost = costs(j);
     para_temp=para_vec{j,1};
     alloc_vec_temp=alloc_vec{j,1};
 %     tran_matrix_temp=tran_matrix{j,1};    

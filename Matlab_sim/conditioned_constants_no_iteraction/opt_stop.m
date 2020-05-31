@@ -27,7 +27,7 @@ organ_allocated=[HR_allocated, LU_allocated, LI_allocated];
 
 
 wait_cost=-1;
-beta=1;
+beta=0.99;
 T=max(time_index);  % last period
 n=max(donor_index); % number of donors
 n_org=size(organ_available, 2); % number of organs considered
@@ -276,7 +276,7 @@ end
 
 %% Start MLE 
 
-para_init=[1;1;1;1;1;1;-1]; % initial guess of the parameters
+para_init=[3;1;1;0;0;0;0;0;0;0]; % initial guess of the parameters
 options=optimset('Display','iter','MaxFunEvals',1e5,'MaxIter',1e5,'TolFun',1e-6,'TolX',1e-4);
 
 
